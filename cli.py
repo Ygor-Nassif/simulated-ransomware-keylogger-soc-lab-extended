@@ -147,6 +147,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_defesa.set_defaults(func=cmd_defesa)
 
+    p_defesa.set_defaults(func=cmd_defesa)
+
     p_reset = subparsers.add_parser("reset", help="Limpa/redefine artefatos gerados no laboratório")
     p_reset.add_argument("--arquivos", action="store_true", help="Recria os arquivos fictícios em lab/test_files/")
     p_reset.add_argument("--chaves", action="store_true", help="Remove chaves em lab/keys/")
@@ -158,8 +160,32 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_reset.set_defaults(func=cmd_reset)
 
+    p_status = subparsers.add_parser(
+        "status",
+        help="Exibe o estado atual do laboratório e dos artefatos",
+    )
+    p_status.set_defaults(func=cmd_status)
+
     return parser
 
+def cmd_status(args: argparse.Namespace) -> int:
+    """Exibe um resumo rápido do estado atual dos diretórios e artefatos do laboratório."""
+    alvo_dir = garantir_caminho_seguro(LAB_TARGET_DIR, PROJECT_ROOT / "lab")
+    chaves_dir = garantir_caminho_seguro(KEYS_DIR, PROJECT_ROOT / "lab")
+    logs_dir = garantir_caminho_seguro(LOGS_DIR, PROJECT_ROOT)
+
+    arquivos_alvo = [p.name for p in alvo_dir.iterdir() if p.is_file()] if alvo_dir.exists() else []
+    arquivos_enc = [nome for nome in arquivos_alvo if nome.endswith(".enc")]
+    nota_resgate = "README_RESCATE.txt" in arquivos_alvo
+
+    chaves = [p.name for p in chaves_dir.iterdir() if p.is_file()] if chaves_dir.exists() else []
+    logs = sorted(p.name for p in logs_dir.iterdir() if p.is_file()) if logs_dir.exists() else []
+
+    print("=== Status do Laboratório ===")
+    print(f"Arquivos em lab/test_files/: {len(arquivos_alvo)} (cifrados .enc: {len(arquivos_enc)} | nota resgate: {nota_resgate})")
+    print(f"Chaves em lab/keys/: {len(chaves)} -> {chaves if chaves else 'nenhuma'}")
+    print(f"Artefatos em logs/: {len(logs)} -> {logs if logs else 'nenhum'}")
+    return 0
 
 def main() -> int:
     parser = build_parser()

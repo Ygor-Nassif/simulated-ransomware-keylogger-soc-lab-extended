@@ -33,6 +33,73 @@ RECOMENDACOES_POR_REGRA = {
 }
 
 
+def gerar_relatorio_markdown(relatorio: dict, destino_md: Path) -> Path:
+    """Gera um relatório defensivo legível em Markdown a partir do dicionário do relatório."""
+    destino_md = Path(destino_md)
+    destino_md.parent.mkdir(parents=True, exist_ok=True)
+
+    resumo = relatorio.get("resumo_executivo", {})
+    nivel_risco = relatorio.get("nivel_risco_geral", "SEM_ALERTAS")
+    total_eventos = resumo.get("total_eventos_analisados", 0)
+    tecnicas = resumo.get("tecnicas_mitre_observadas", [])
+    alertas = relatorio.get("deteccao", {}).get("alertas", relatorio.get("alertas", []))
+    total_alertas = resumo.get("total_alertas", len(alertas))
+    recomendacoes = relatorio.get("recomendacoes_mitigacao", [])
+
+    linhas = [
+        "# Relatório de Análise Defensiva e MITRE ATT&CK",
+        "",
+        f"- **Gerado em (UTC):** `{relatorio.get('gerado_em_utc', 'N/A')}`",
+        "",
+        "## Resumo Executivo",
+        "",
+        f"- **Nível de risco geral:** `{nivel_risco}`",
+        f"- **Total de eventos analisados:** `{total_eventos}`",
+        f"- **Total de alertas:** `{total_alertas}`",
+        "",
+        "## Técnicas MITRE ATT&CK Observadas",
+        "",
+    ]
+
+    if tecnicas:
+        for tec in tecnicas:
+            linhas.append(
+                f"- **[{tec.get('tecnica_id', 'N/A')}]** {tec.get('tecnica', 'N/A')} "
+                f"({tec.get('tatica', 'N/A')} / `{tec.get('tatica_id', 'N/A')}`)"
+            )
+    else:
+        linhas.append("- Nenhuma técnica MITRE ATT&CK observada.")
+
+    linhas.extend(["", "## Alertas Detalhados", ""])
+
+    if alertas:
+        for alerta in alertas:
+            mitre = alerta.get("mitre_attack", {})
+            linhas.extend(
+                [
+                    f"### {alerta.get('regra_id', 'REGRA')} — {alerta.get('titulo', 'Sem título')}",
+                    "",
+                    f"- **Severidade:** `{alerta.get('severidade', 'N/A')}`",
+                    f"- **Técnica MITRE:** `[{mitre.get('tecnica_id', 'N/A')}]` {mitre.get('tecnica', 'N/A')}",
+                    f"- **Tática MITRE:** {mitre.get('tatica', 'N/A')} (`{mitre.get('tatica_id', 'N/A')}`)",
+                    "",
+                ]
+            )
+    else:
+        linhas.extend(["Nenhum alerta disparado na análise atual.", ""])
+
+    linhas.extend(["## Recomendações de Mitigação", ""])
+
+    if recomendacoes:
+        for rec in recomendacoes:
+            linhas.append(f"- {rec}")
+    else:
+        linhas.append("- Nenhuma recomendação específica aplicável no momento.")
+
+    destino_md.write_text("\n".join(linhas).strip() + "\n", encoding="utf-8")
+    return destino_md
+
+
 def calcular_nivel_risco(alertas: list[dict]) -> str:
     """Determina o nível geral de risco a partir das severidades dos alertas."""
     severidades = {alerta.get("severidade", "BAIXA") for alerta in alertas}
@@ -52,7 +119,7 @@ def gerar_relatorio_defensivo(
     diretorio_alvo: Path = LAB_TARGET_DIR,
     arquivo_saida: Path = DEFAULT_REPORT_FILE,
 ) -> dict:
-    """Consolida indicadores, alertas, mapeamento MITRE e recomendações em um relatório JSON."""
+    """Consolida indicadores, alertas, mapeamento MITRE e recomendações em JSON e Markdown."""
     indicadores = extrair_indicadores(arquivo_log=arquivo_log, diretorio_alvo=diretorio_alvo)
     deteccao = avaliar_comportamentos(arquivo_log=arquivo_log, diretorio_alvo=diretorio_alvo)
     alertas = deteccao.get("alertas", [])
@@ -96,11 +163,15 @@ def gerar_relatorio_defensivo(
         encoding="utf-8",
     )
 
+    destino_md = garantir_caminho_seguro(destino_seguro.with_suffix(".md"), LOGS_DIR)
+    gerar_relatorio_markdown(relatorio, destino_md)
+
     registrar_evento(
         modulo="defense.analysis",
         acao="relatorio_defensivo_gerado",
         detalhes={
             "arquivo_relatorio": destino_seguro.name,
+            "arquivo_relatorio_md": destino_md.name,
             "nivel_risco_geral": relatorio["nivel_risco_geral"],
             "total_alertas": len(alertas),
             "tecnicas_mitre": [t.get("tecnica_id") for t in tecnicas_mitre],
@@ -120,3 +191,4 @@ if __name__ == "__main__":
     for rec in relatorio_final["recomendacoes_mitigacao"]:
         print(f" - {rec}")
     print(f"Relatório salvo em: {DEFAULT_REPORT_FILE}")
+    print(f"Relatório Markdown salvo em: {DEFAULT_REPORT_FILE.with_suffix('.md')}")
