@@ -378,18 +378,6 @@ O laboratório não substitui uma solução EDR, SIEM ou sandbox profissional. A
 
 A chave gerada é uma chave de laboratório. Preserve-a enquanto precisar restaurar os arquivos cifrados e não a publique em repositórios públicos; recomenda-se incluir `lab/keys/` no `.gitignore`. Antes de executar, mantenha cópias de segurança de quaisquer dados importantes e não direcione os módulos para arquivos reais.
 
-## Próximos passos
-
-Possíveis evoluções para versões futuras:
-
-- Implementar testes automatizados e de regressão para validação de caminhos, criptografia, integridade, regras de detecção e níveis de risco.
-- Ampliar os cenários de detecção e a correlação de eventos.
-- Adicionar exportação de relatório em HTML.
-- Adicionar exemplos de regras e consultas para integração conceitual com ferramentas SIEM.
-- Melhorar a visualização dos indicadores e alertas.
-
-Esses itens são propostas de evolução e não devem ser interpretados como funcionalidades já implementadas.
-
 ## Demonstração
 
 
@@ -412,6 +400,19 @@ Esses itens são propostas de evolução e não devem ser interpretados como fun
 ### Relatório defensivo e técnicas MITRE ATT&CK
 
 ![Relatório defensivo](images/defense-report.png)
+
+
+## Próximos passos
+
+Possíveis evoluções para versões futuras:
+
+- Implementar testes automatizados e de regressão para validação de caminhos, criptografia, integridade, regras de detecção e níveis de risco.
+- Ampliar os cenários de detecção e a correlação de eventos.
+- Adicionar exportação de relatório em HTML.
+- Adicionar exemplos de regras e consultas para integração conceitual com ferramentas SIEM.
+- Aprimorar a apresentação visual dos indicadores e alertas (como resumos mais ricos ou painéis).
+
+Esses itens são propostas de evolução e não devem ser interpretados como funcionalidades já implementadas.
 
 ## Autor
 

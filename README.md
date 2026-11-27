@@ -378,18 +378,6 @@ This laboratory does not replace a professional EDR, SIEM, or sandbox solution. 
 
 The generated key is a laboratory key. Keep it safe while you need to decrypt encrypted files and never publish it to public repositories; it is recommended to include `lab/keys/` in `.gitignore`. Before running, maintain backups of any important data and never point the modules at real files.
 
-## Next Steps
-
-Potential enhancements for future versions:
-
-- Implement automated and regression tests to validate paths, cryptography, integrity, detection rules, and risk levels.
-- Expand detection scenarios and event correlation.
-- Add HTML report export.
-- Add sample rules and queries for conceptual integration with SIEM tools.
-- Enhance visualization of indicators and alerts.
-
-These items are proposed enhancements and should not be interpreted as already implemented features.
-
 ## Demonstration
 
 
@@ -412,6 +400,19 @@ These items are proposed enhancements and should not be interpreted as already i
 ### Defense report and MITRE ATT&CK techniques
 
 ![Defense report](images/defense-report.png)
+
+
+## Next Steps
+
+Potential enhancements for future versions:
+
+- Implement automated and regression tests to validate paths, cryptography, integrity, detection rules, and risk levels.
+- Expand detection scenarios and event correlation.
+- Add HTML report export.
+- Add sample rules and queries for conceptual integration with SIEM tools.
+- Enhance visual presentation of indicators and alerts (such as richer summaries or dashboards).
+
+These items are proposed enhancements and should not be interpreted as already implemented features.
 
 ## Author
 
