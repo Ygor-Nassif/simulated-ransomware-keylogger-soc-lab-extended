@@ -2,117 +2,119 @@
 
 # Malware Lab Python
 
-**Laboratório controlado para simulação de comportamentos de malware, coleta de indicadores e análise defensiva com mapeamento MITRE ATT&CK.**
+**A controlled lab for simulating malware behaviors, collecting indicators, and performing defensive analysis with MITRE ATT&CK mapping.**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
 ![Cryptography](https://img.shields.io/badge/Cryptography-AES--256--GCM-6f42c1)
-![MITRE ATT%26CK](https://img.shields.io/badge/Framework-MITRE%20ATT%26CK-red)
-![Status](https://img.shields.io/badge/Status-Educacional-informational)
+![MITRE ATT&CK](https://img.shields.io/badge/Framework-MITRE%20ATT%26CK-red)
+![Status](https://img.shields.io/badge/Status-Educational-informational)
+
+[Português](README-pt-br.md) | English
 
 </div>
 
 ---
 
-## Visão geral
+## Overview
 
-O **Malware Lab Python** é um projeto educacional desenvolvido para estudar, em ambiente controlado, comportamentos associados a ameaças como ransomware e keylogger. O laboratório reúne simulações de atividade, geração de registros, extração de indicadores e regras de detecção que relacionam os comportamentos observados a técnicas do framework **MITRE ATT&CK**.
+**Malware Lab Python** is an educational project built to study, in a controlled environment, behaviors associated with threats such as ransomware and keyloggers. The lab brings together activity simulations, log generation, indicator extraction, and detection rules that map the observed behaviors to techniques from the **MITRE ATT&CK** framework.
 
-A proposta é percorrer o ciclo de um exercício de análise: preparar arquivos fictícios, executar simulações restritas ao laboratório, observar os artefatos produzidos e gerar um relatório defensivo com alertas, severidades e recomendações de mitigação.
+The goal is to walk through the full cycle of an analysis exercise: prepare dummy files, run simulations restricted to the lab, observe the artifacts they produce, and generate a defensive report with alerts, severities, and mitigation recommendations.
 
-O projeto foi desenvolvido em Python e organizado em módulos independentes, com uma interface de linha de comando (CLI) para centralizar as operações.
+The project is written in Python and organized into independent modules, with a command-line interface (CLI) that centralizes all operations.
 
-> **Aviso de segurança:** este repositório é destinado exclusivamente a estudo e demonstração em ambiente autorizado. As rotinas de ransomware atuam somente sobre arquivos fictícios em `lab/test_files/`. A captura de teclado ocorre apenas na janela de teste da aplicação. A simulação de transmissão utiliza, por padrão, `127.0.0.1:9999`. Não utilize o projeto em sistemas, arquivos ou redes de terceiros.
+> **Safety notice:** this repository is intended exclusively for study and demonstration in an authorized environment. The ransomware routines operate only on dummy files in `lab/test_files/`. Keystroke capture happens only inside the application's own test window. The simulated data transmission uses `127.0.0.1:9999` by default. Do not use this project on third-party systems, files, or networks.
 
-## Objetivos
+## Objectives
 
-- Compreender o fluxo de cifragem e restauração de arquivos usando AES-256-GCM.
-- Observar como uma captura de teclado restrita a uma janela pode gerar artefatos de log.
-- Demonstrar, sem alterar configurações reais do sistema operacional, o conceito de persistência.
-- Simular uma transmissão de dados para um endpoint local de laboratório.
-- Extrair indicadores a partir de logs e artefatos.
-- Correlacionar comportamentos com técnicas MITRE ATT&CK.
-- Produzir um relatório JSON com nível de risco, evidências e recomendações defensivas.
+- Understand the file encryption and restoration workflow using AES-256-GCM.
+- Observe how keystroke capture restricted to a single window can generate log artifacts.
+- Demonstrate the concept of persistence without changing any real operating system settings.
+- Simulate a data transmission to a local lab endpoint.
+- Extract indicators from logs and artifacts.
+- Correlate behaviors with MITRE ATT&CK techniques.
+- Produce a JSON report with risk level, evidence, and defensive recommendations.
 
-## Funcionalidades
+## Features
 
-### 1. Simulação de ransomware
+### 1. Ransomware simulation
 
-O módulo `ransomware/` prepara arquivos fictícios e realiza uma simulação de cifragem e descriptografia.
+The `ransomware/` module prepares dummy files and runs an encryption and decryption simulation.
 
-- Geração de arquivos de teste em `lab/test_files/`.
-- Cálculo de hashes SHA-256 para estabelecer uma referência de integridade.
-- Geração e carregamento de chave de 256 bits.
-- Cifragem autenticada com AES-256-GCM.
-- Criação de arquivos com extensão `.enc` e de uma nota de simulação `README_RESCATE.txt`.
-- Restauração dos arquivos usando a chave do laboratório.
-- Comparação dos hashes restaurados com o manifesto `logs/baseline_hashes.json`.
-- Registro das operações em `logs/lab_operations.log`.
+- Generation of test files in `lab/test_files/`.
+- SHA-256 hash calculation to establish an integrity baseline.
+- Generation and loading of a 256-bit key.
+- Authenticated encryption with AES-256-GCM.
+- Creation of files with the `.enc` extension and a simulation note, `README_RESCATE.txt`.
+- File restoration using the lab key.
+- Comparison of restored file hashes against the `logs/baseline_hashes.json` manifest.
+- Operation logging to `logs/lab_operations.log`.
 
-### 2. Simulação de keylogger
+### 2. Keylogger simulation
 
-O módulo `keylogger/` demonstra a captura de entradas de teclado em uma janela gráfica criada para o exercício.
+The `keylogger/` module demonstrates keyboard input capture in a graphical window created for the exercise.
 
-- Captura de teclas somente enquanto a janela de teste está em foco.
-- Registro das teclas com data, hora e identificação da janela.
-- Geração do arquivo `logs/keylogger_simulado.txt`.
-- Criação de um artefato JSON que representa conceitualmente persistência, sem instalar mecanismos de inicialização no sistema.
-- Simulação de transmissão de uma amostra de registros para um serviço local, por padrão em `127.0.0.1:9999`.
-- Tratamento de falhas de conexão e registro do resultado no log do laboratório.
+- Keystrokes are captured only while the test window is in focus.
+- Keystrokes are logged with date, time, and window identification.
+- Generation of the `logs/keylogger_simulado.txt` file.
+- Creation of a JSON artifact that conceptually represents persistence, without installing any startup mechanism on the system.
+- Simulated transmission of a sample of the records to a local service, by default at `127.0.0.1:9999`.
+- Handling of connection failures and logging of the result in the lab log.
 
-### 3. Análise e detecção defensiva
+### 3. Defensive analysis and detection
 
-O módulo `defense/` consolida os registros produzidos pelos outros componentes.
+The `defense/` module consolidates the records produced by the other components.
 
-- Extração de eventos por módulo e por ação.
-- Identificação de artefatos relacionados às simulações.
-- Levantamento de destinos de rede registrados.
-- Correlação de evidências com regras de detecção.
-- Mapeamento das detecções para técnicas MITRE ATT&CK.
-- Classificação de severidade e cálculo de um nível geral de risco.
-- Geração do relatório `logs/defense_report.json`.
-- Recomendações de mitigação associadas às regras acionadas.
+- Extraction of events by module and by action.
+- Identification of artifacts related to the simulations.
+- Listing of recorded network destinations.
+- Correlation of evidence with detection rules.
+- Mapping of detections to MITRE ATT&CK techniques.
+- Severity classification and calculation of an overall risk level.
+- Generation of the `logs/defense_report.json` report.
+- Mitigation recommendations tied to the triggered rules.
 
-### 4. CLI unificada e reset do laboratório
+### 4. Unified CLI and lab reset
 
-O arquivo `cli.py` centraliza a execução dos módulos por meio de `argparse`. O comando `reset` permite limpar grupos específicos de artefatos e recriar os arquivos fictícios quando solicitado.
+The `cli.py` file centralizes module execution through `argparse`. The `reset` command clears specific groups of artifacts and recreates the dummy files on request.
 
-## Mapeamento MITRE ATT&CK
+## MITRE ATT&CK mapping
 
-As regras implementadas relacionam os comportamentos simulados às seguintes técnicas:
+The implemented rules map the simulated behaviors to the following techniques:
 
-| Regra | Técnica | ID | Comportamento observado |
+| Rule | Technique | ID | Observed behavior |
 |---|---|---|---|
-| `DET-RANSOM-001` | Data Encrypted for Impact | `T1486` | Arquivos `.enc`, nota de resgate ou eventos de cifragem |
-| `DET-KEYLOG-001` | Input Capture: GUI Input Capture | `T1056.002` | Registro de teclas na janela de teste |
-| `DET-PERSIST-001` | Boot or Logon Autostart Execution | `T1547` | Artefato de persistência simulada |
-| `DET-EXFIL-001` | Exfiltration Over Alternative Protocol | `T1048` | Tentativa ou ocorrência de transmissão simulada |
+| `DET-RANSOM-001` | Data Encrypted for Impact | `T1486` | `.enc` files, ransom note, or encryption events |
+| `DET-KEYLOG-001` | Input Capture: GUI Input Capture | `T1056.002` | Keystroke logging in the test window |
+| `DET-PERSIST-001` | Boot or Logon Autostart Execution | `T1547` | Simulated persistence artifact |
+| `DET-EXFIL-001` | Exfiltration Over Alternative Protocol | `T1048` | Attempted or completed simulated transmission |
 
-O mapeamento é utilizado como referência de classificação dos comportamentos observados no laboratório. Ele não representa, por si só, uma implementação completa de uma plataforma de detecção corporativa.
+The mapping serves as a classification reference for the behaviors observed in the lab. It does not, by itself, represent a complete implementation of an enterprise detection platform.
 
-## Arquitetura
+## Architecture
 
 ```mermaid
 flowchart TD
-    CLI["cli.py<br/>Interface de linha de comando"]
+    CLI["cli.py<br/>Command-line interface"]
     CLI --> R["ransomware/"]
     CLI --> K["keylogger/"]
     CLI --> D["defense/"]
     CLI --> X["reset"]
 
-    R --> LAB["lab/test_files/<br/>Arquivos fictícios"]
-    R --> KEYS["lab/keys/<br/>Chave do laboratório"]
-    R --> LOGS["logs/<br/>Eventos e hashes"]
+    R --> LAB["lab/test_files/<br/>Dummy files"]
+    R --> KEYS["lab/keys/<br/>Lab key"]
+    R --> LOGS["logs/<br/>Events and hashes"]
 
     K --> LOGS
-    K --> LOOP["127.0.0.1:9999<br/>Endpoint local simulado"]
+    K --> LOOP["127.0.0.1:9999<br/>Simulated local endpoint"]
 
-    LOGS --> I["Indicadores"]
-    I --> DET["Regras de detecção"]
-    DET --> MITRE["Mapeamento MITRE ATT&CK"]
+    LOGS --> I["Indicators"]
+    I --> DET["Detection rules"]
+    DET --> MITRE["MITRE ATT&CK mapping"]
     MITRE --> REPORT["defense_report.json"]
 ```
 
-### Estrutura de diretórios
+### Directory structure
 
 ```text
 malware-lab-python/
@@ -143,50 +145,51 @@ malware-lab-python/
 │   ├── sim_persistence.json
 │   └── defense_report.json
 ├── requirements.txt
-└── README.md
+├── README.md
+└── README-pt-br.md
 ```
 
-Os arquivos e diretórios em `lab/` e `logs/` são artefatos de execução. Alguns são criados durante o uso do laboratório e podem não estar presentes em uma cópia limpa do repositório.
+The files and directories under `lab/` and `logs/` are runtime artifacts. Some are created while the lab is in use and may not be present in a clean copy of the repository.
 
-## Tecnologias e conceitos
+## Technologies and concepts
 
-| Tecnologia / conceito | Aplicação no projeto |
+| Technology / concept | Use in the project |
 |---|---|
-| Python | Implementação dos módulos e da CLI |
-| `argparse` | Organização dos subcomandos e argumentos |
-| `cryptography` | Operações AES-GCM e geração de chave |
-| AES-256-GCM | Cifragem autenticada dos arquivos fictícios |
-| SHA-256 | Verificação de integridade dos arquivos |
-| `pathlib` | Manipulação de caminhos e diretórios |
-| `logging` / JSON Lines | Rastreabilidade dos eventos do laboratório |
-| `tkinter` | Interface gráfica de teste para captura restrita |
-| `socket` | Simulação de comunicação com endpoint local |
-| MITRE ATT&CK | Referência para classificação das técnicas observadas |
-| Mermaid | Representação visual da arquitetura |
+| Python | Implementation of the modules and the CLI |
+| `argparse` | Organization of subcommands and arguments |
+| `cryptography` | AES-GCM operations and key generation |
+| AES-256-GCM | Authenticated encryption of the dummy files |
+| SHA-256 | File integrity verification |
+| `pathlib` | Path and directory handling |
+| `logging` / JSON Lines | Traceability of lab events |
+| `tkinter` | Test GUI for restricted capture |
+| `socket` | Simulated communication with a local endpoint |
+| MITRE ATT&CK | Reference for classifying the observed techniques |
+| Mermaid | Visual representation of the architecture |
 
-## Requisitos
+## Requirements
 
-- Python instalado.
-- `pip` disponível.
-- Windows, Linux ou macOS. A interface gráfica de captura depende de uma instalação funcional do Tk/Tkinter.
-- Execução a partir do diretório raiz do projeto.
+- Python 3.10 or later.
+- `pip` available.
+- Windows, Linux, or macOS. The graphical capture interface requires a working Tk/Tkinter installation.
+- Commands must be run from the project root directory.
 
-A única dependência externa declarada em `requirements.txt` é:
+The only external dependency declared in `requirements.txt` is:
 
 ```text
 cryptography>=42.0.0
 ```
 
-## Instalação
+## Installation
 
-Clone o repositório:
+Clone the repository:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone <REPOSITORY_URL>
 cd malware-lab-python
 ```
 
-Crie e ative um ambiente virtual.
+Create and activate a virtual environment.
 
 **Windows (PowerShell):**
 
@@ -195,7 +198,7 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-**Windows (Prompt de Comando):**
+**Windows (Command Prompt):**
 
 ```bat
 python -m venv .venv
@@ -209,206 +212,207 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Instale as dependências:
+Install the dependencies:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Como executar
+## Usage
 
-Execute os comandos a partir da raiz do repositório.
+Run the commands from the repository root.
 
-### Preparar os arquivos fictícios
+> **Note:** the CLI subcommands and some generated file names are in Portuguese. Quick reference: `gerar` = generate, `chave` = key, `cifrar` = encrypt, `decifrar` = decrypt, `captura` = capture, `simular` = simulate, `defesa` = defense, `indicadores` = indicators, `detectar` = detect, `analisar` = analyze. For `reset`: `--arquivos` = files, `--chaves` = keys, `--tudo` = everything.
+
+### Prepare the dummy files
 
 ```bash
 python cli.py ransomware gerar
 ```
 
-### Gerar ou verificar a chave do laboratório
+### Generate or verify the lab key
 
 ```bash
 python cli.py ransomware chave
 ```
 
-### Executar a simulação de cifragem
+### Run the encryption simulation
 
 ```bash
 python cli.py ransomware cifrar
 ```
 
-A rotina cria arquivos `.enc` e a nota `README_RESCATE.txt` dentro de `lab/test_files/`. Ela utiliza a chave armazenada em `lab/keys/`.
+The routine creates `.enc` files and the `README_RESCATE.txt` note inside `lab/test_files/`. It uses the key stored in `lab/keys/`.
 
-### Restaurar os arquivos e verificar integridade
+### Restore the files and verify integrity
 
 ```bash
 python cli.py ransomware decifrar
 ```
 
-A restauração utiliza AES-GCM e compara o SHA-256 dos arquivos recuperados com os valores registrados em `logs/baseline_hashes.json`.
+Restoration uses AES-GCM and compares the SHA-256 of the recovered files against the values recorded in `logs/baseline_hashes.json`.
 
-### Testar o registro de teclas
+### Test keystroke logging
 
 ```bash
 python cli.py keylogger logger
 ```
 
-Esse comando executa o teste simples do módulo de registro.
+This command runs a simple test of the logging module.
 
-### Abrir a janela de captura controlada
+### Open the controlled capture window
 
 ```bash
 python cli.py keylogger captura
 ```
 
-Digite apenas conteúdo fictício na janela aberta. O registro ocorre somente enquanto a janela de teste estiver em foco. Feche pelo botão **Encerrar e Salvar**.
+Type only dummy content in the window that opens. Logging occurs only while the test window is in focus. Close it with the **Encerrar e Salvar** (End and Save) button.
 
-### Gerar artefatos de persistência e testar transmissão local
+### Generate persistence artifacts and test local transmission
 
 ```bash
 python cli.py keylogger simular
 ```
 
-O simulador grava um artefato JSON em `logs/` e tenta conectar ao endpoint padrão `127.0.0.1:9999`. Se não houver um receptor escutando nessa porta, a falha é registrada como resultado da simulação; isso não interrompe o restante do fluxo.
+The simulator writes a JSON artifact to `logs/` and attempts to connect to the default endpoint `127.0.0.1:9999`. If no receiver is listening on that port, the failure is recorded as a result of the simulation; it does not interrupt the rest of the workflow.
 
-### Extrair indicadores
+### Extract indicators
 
 ```bash
 python cli.py defesa indicadores
 ```
 
-### Executar as regras de detecção
+### Run the detection rules
 
 ```bash
 python cli.py defesa detectar
 ```
 
-### Gerar o relatório defensivo
+### Generate the defensive report
 
 ```bash
 python cli.py defesa analisar
 ```
 
-O relatório consolidado é salvo em:
+The consolidated report is saved to:
 
 ```text
 logs/defense_report.json
 ```
 
-### Resetar o ambiente
+### Reset the environment
 
-Recriar os arquivos fictícios:
+Recreate the dummy files:
 
 ```bash
 python cli.py reset --arquivos
 ```
 
-Remover as chaves do laboratório:
+Remove the lab keys:
 
 ```bash
 python cli.py reset --chaves
 ```
 
-Remover logs e relatórios:
+Remove logs and reports:
 
 ```bash
 python cli.py reset --logs
 ```
 
-Executar todas as opções de reset:
+Run all reset options:
 
 ```bash
 python cli.py reset --tudo
 ```
 
-**Atenção:** o reset de chaves remove a chave necessária para descriptografar os arquivos cifrados existentes. Faça a restauração antes de remover a chave, caso queira recuperar os arquivos do exercício.
+**Warning:** resetting the keys removes the key required to decrypt the existing encrypted files. Restore the files before removing the key if you want to recover the exercise files.
 
-## Fluxo recomendado de demonstração
+## Recommended demonstration flow
 
-Para observar o ciclo completo e gerar evidências para análise, utilize a seguinte sequência:
+To observe the full cycle and generate evidence for analysis, follow this sequence:
 
-1. Prepare os arquivos fictícios.
-2. Gere ou confirme a chave do laboratório.
-3. Execute a cifragem simulada.
-4. Execute a detecção e observe os indicadores relacionados ao ransomware.
-5. Restaure os arquivos e confira os resultados de integridade.
-6. Abra a janela do keylogger e digite dados fictícios.
-7. Execute o simulador de persistência e transmissão local.
-8. Gere novamente os indicadores e o relatório defensivo.
-9. Revise os alertas, técnicas MITRE ATT&CK e recomendações no JSON.
+1. Prepare the dummy files.
+2. Generate or confirm the lab key.
+3. Run the simulated encryption.
+4. Run detection and observe the ransomware-related indicators.
+5. Restore the files and check the integrity results.
+6. Open the keylogger window and type dummy data.
+7. Run the persistence and local transmission simulator.
+8. Regenerate the indicators and the defensive report.
+9. Review the alerts, MITRE ATT&CK techniques, and recommendations in the JSON.
 
-## Artefatos gerados
+## Generated artifacts
 
-| Caminho | Finalidade |
+| Path | Purpose |
 |---|---|
-| `lab/test_files/` | Arquivos fictícios utilizados no exercício |
-| `lab/keys/aes256_lab.key` | Chave AES-256 do laboratório |
-| `logs/baseline_hashes.json` | Hashes SHA-256 de referência |
-| `logs/lab_operations.log` | Eventos estruturados em JSON Lines |
-| `logs/keylogger_simulado.txt` | Entradas registradas na janela de teste |
-| `logs/sim_persistence.json` | Registro conceitual de persistência simulada |
-| `logs/defense_report.json` | Relatório de indicadores, alertas e recomendações |
+| `lab/test_files/` | Dummy files used in the exercise |
+| `lab/keys/aes256_lab.key` | Lab AES-256 key |
+| `logs/baseline_hashes.json` | Baseline SHA-256 hashes |
+| `logs/lab_operations.log` | Structured events in JSON Lines |
+| `logs/keylogger_simulado.txt` | Entries recorded in the test window |
+| `logs/sim_persistence.json` | Conceptual record of simulated persistence |
+| `logs/defense_report.json` | Report of indicators, alerts, and recommendations |
 
-## Segurança e limitações
+## Security and limitations
 
-Este projeto foi construído para restringir as simulações ao ambiente de laboratório:
+This project was built to keep the simulations confined to the lab environment:
 
-- **Escopo de arquivos:** as rotinas de geração, cifragem e restauração validam os caminhos para manter as operações dentro de `lab/test_files/`.
-- **Captura de teclado:** o evento de teclado é associado à janela Tkinter criada para o exercício; não há captura global de teclas.
-- **Persistência:** o módulo gera um arquivo JSON demonstrativo. Não instala serviços, tarefas agendadas ou mecanismos reais de inicialização.
-- **Rede:** o destino padrão da simulação é `127.0.0.1:9999`, ou seja, o loopback da própria máquina.
-- **Rastreabilidade:** as operações relevantes são registradas em `logs/lab_operations.log`.
-- **Integridade:** o projeto utiliza SHA-256 para comparar os arquivos restaurados com o manifesto de referência.
+- **File scope:** the generation, encryption, and restoration routines validate paths to keep operations inside `lab/test_files/`.
+- **Keyboard capture:** keyboard events are bound to the Tkinter window created for the exercise; there is no global keystroke capture.
+- **Persistence:** the module generates a demonstration JSON file. It does not install services, scheduled tasks, or any real startup mechanism.
+- **Network:** the default destination of the simulation is `127.0.0.1:9999`, i.e., the machine's own loopback interface.
+- **Traceability:** relevant operations are recorded in `logs/lab_operations.log`.
+- **Integrity:** the project uses SHA-256 to compare restored files against the baseline manifest.
 
-O laboratório não substitui uma solução EDR, SIEM ou sandbox profissional. As regras são determinísticas e dependem dos eventos e artefatos produzidos pelos próprios módulos. O mapeamento MITRE ATT&CK é uma associação analítica para fins educacionais, não uma certificação de cobertura de técnicas.
+The lab is not a substitute for a professional EDR, SIEM, or sandbox solution. The rules are deterministic and depend on the events and artifacts produced by the modules themselves. The MITRE ATT&CK mapping is an analytical association for educational purposes, not a certification of technique coverage.
 
-A chave gerada é uma chave de laboratório. Preserve-a enquanto precisar restaurar os arquivos cifrados e não a publique em repositórios públicos. Antes de executar, mantenha cópias de segurança de quaisquer dados importantes e não direcione os módulos para arquivos reais.
+The generated key is a lab key. Keep it for as long as you need to restore the encrypted files, and do not publish it in public repositories; adding `lab/keys/` to `.gitignore` is recommended. Before running the project, back up any important data, and do not point the modules at real files.
 
-## Próximos passos
+## Next steps
 
-Possíveis evoluções para versões futuras:
+Possible improvements for future versions:
 
-- Implementar testes automatizados para validação de caminhos, criptografia, integridade e regras de detecção.
-- Ampliar os cenários de detecção e a correlação de eventos.
-- Adicionar exportação de relatório em HTML ou Markdown.
-- Criar testes de regressão para os níveis de risco.
-- Adicionar exemplos de regras e consultas para integração conceitual com ferramentas SIEM.
-- Melhorar a visualização dos indicadores e alertas.
+- Implement automated and regression tests covering path validation, cryptography, integrity, detection rules, and risk levels.
+- Expand the detection scenarios and event correlation.
+- Add report export to HTML or Markdown.
+- Add example rules and queries for conceptual integration with SIEM tools.
+- Improve the visualization of indicators and alerts.
 
-Esses itens são propostas de evolução e não devem ser interpretados como funcionalidades já implementadas.
+These items are proposed improvements and should not be read as features that are already implemented.
 
-## Demonstração
+## Demo
 
-Adicione capturas de tela reais do laboratório na pasta `images/`. Sugestões:
+Add real screenshots of the lab to the `images/` folder. Suggestions:
 
-| Arquivo sugerido | Conteúdo |
+| Suggested file | Content |
 |---|---|
-| `images/cli-help.png` | Ajuda e subcomandos disponíveis na CLI |
-| `images/ransomware-encryption.png` | Arquivos fictícios antes e depois da cifragem |
-| `images/integrity-check.png` | Resultado da restauração e verificação SHA-256 |
-| `images/keylogger-window.png` | Janela de captura controlada |
-| `images/defense-report.png` | Resumo do relatório defensivo e técnicas MITRE |
+| `images/cli-help.png` | CLI help and available subcommands |
+| `images/ransomware-encryption.png` | Dummy files before and after encryption |
+| `images/integrity-check.png` | Restoration result and SHA-256 verification |
+| `images/keylogger-window.png` | Controlled capture window |
+| `images/defense-report.png` | Summary of the defensive report and MITRE techniques |
 
-Quando as imagens forem adicionadas ao repositório, elas podem ser incorporadas aqui, por exemplo:
+Once the images are added to the repository, they can be embedded here, for example:
 
 ```markdown
-![Relatório defensivo](images/defense-report.png)
+![Defensive report](images/defense-report.png)
 ```
 
-## Autor
+## Author
 
 **Ygor Jianjulio Nassif**
 
-Estudante de Ciência da Computação com interesse em Cibersegurança, análise de malware, segurança ofensiva e desenvolvimento de ferramentas em Python.
+Computer Science student with an interest in cybersecurity, malware analysis, offensive security, and Python tool development.
 
-- GitHub: [adicione seu perfil]
-- LinkedIn: [adicione seu perfil]
+- GitHub: [add your profile]
+- LinkedIn: [linkedin.com/in/ygor-jianjulio-nassif](https://www.linkedin.com/in/ygor-jianjulio-nassif)
 
 ---
 
 <div align="center">
 
-Desenvolvido para fins educacionais, com foco em simulação controlada, análise de comportamento e aprendizado em cibersegurança.
+Developed for educational purposes, with a focus on controlled simulation, behavior analysis, and cybersecurity learning.
 
 </div>
