@@ -1,0 +1,21 @@
+# Ambientes virtuais e caches Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+
+# Artefatos sensíveis ou gerados em execução
+lab/keys/
+*.key
+logs/*.log
+logs/*.json
+logs/*.txt
+
+# Arquivos temporários do sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
