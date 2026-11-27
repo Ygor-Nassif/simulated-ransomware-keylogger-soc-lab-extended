@@ -33,7 +33,7 @@ O projeto foi desenvolvido em Python e organizado em módulos independentes, com
 - Simular uma transmissão de dados para um endpoint local de laboratório.
 - Extrair indicadores a partir de logs e artefatos.
 - Correlacionar comportamentos com técnicas MITRE ATT&CK.
-- Produzir um relatório JSON com nível de risco, evidências e recomendações defensivas.
+- Produzir relatórios em JSON e Markdown com nível de risco, evidências e recomendações defensivas.
 
 ## Funcionalidades
 
@@ -71,12 +71,12 @@ O módulo `defense/` consolida os registros produzidos pelos outros componentes.
 - Correlação de evidências com regras de detecção.
 - Mapeamento das detecções para técnicas MITRE ATT&CK.
 - Classificação de severidade e cálculo de um nível geral de risco.
-- Geração do relatório `logs/defense_report.json`.
+- Geração dos relatórios `logs/defense_report.json` e `logs/defense_report.md`.
 - Recomendações de mitigação associadas às regras acionadas.
 
-### 4. CLI unificada e reset do laboratório
+### 4. CLI unificada, status e reset do laboratório
 
-O arquivo `cli.py` centraliza a execução dos módulos por meio de `argparse`. O comando `reset` permite limpar grupos específicos de artefatos e recriar os arquivos fictícios quando solicitado.
+O arquivo `cli.py` centraliza a execução dos módulos por meio de `argparse`. O comando `status` exibe o estado atual dos arquivos de teste, chaves e artefatos de log, enquanto o comando `reset` permite limpar grupos específicos de artefatos e recriar os arquivos fictícios quando solicitado.
 
 ## Mapeamento MITRE ATT&CK
 
@@ -99,6 +99,7 @@ flowchart TD
     CLI --> R["ransomware/"]
     CLI --> K["keylogger/"]
     CLI --> D["defense/"]
+    CLI --> S["status"]
     CLI --> X["reset"]
 
     R --> LAB["lab/test_files/<br/>Arquivos fictícios"]
@@ -111,7 +112,7 @@ flowchart TD
     LOGS --> I["Indicadores"]
     I --> DET["Regras de detecção"]
     DET --> MITRE["Mapeamento MITRE ATT&CK"]
-    MITRE --> REPORT["defense_report.json"]
+    MITRE --> REPORT["defense_report.json / .md"]
 ```
 
 ### Estrutura de diretórios
@@ -143,7 +144,8 @@ simulated-ransomware-keylogger-soc-lab-extended/
 │   ├── lab_operations.log
 │   ├── keylogger_simulado.txt
 │   ├── sim_persistence.json
-│   └── defense_report.json
+│   ├── defense_report.json
+│   └── defense_report.md
 ├── requirements.txt
 ├── README.md
 └── README-pt-br.md
@@ -223,6 +225,12 @@ pip install -r requirements.txt
 
 Execute os comandos a partir da raiz do repositório.
 
+### Verificar o status do laboratório
+
+```bash
+python cli.py status
+```
+
 ### Preparar os arquivos fictícios
 
 ```bash
@@ -293,10 +301,11 @@ python cli.py defesa detectar
 python cli.py defesa analisar
 ```
 
-O relatório consolidado é salvo em:
+Os relatórios consolidados são salvos em:
 
 ```text
 logs/defense_report.json
+logs/defense_report.md
 ```
 
 ### Resetar o ambiente
@@ -338,8 +347,8 @@ Para observar o ciclo completo e gerar evidências para análise, utilize a segu
 5. Restaure os arquivos e confira os resultados de integridade.
 6. Abra a janela do keylogger e digite dados fictícios.
 7. Execute o simulador de persistência e transmissão local.
-8. Gere novamente os indicadores e o relatório defensivo.
-9. Revise os alertas, técnicas MITRE ATT&CK e recomendações no JSON.
+8. Gere novamente os indicadores e os relatórios defensivos (JSON e Markdown).
+9. Revise os alertas, técnicas MITRE ATT&CK e recomendações nos relatórios gerados.
 
 ## Artefatos gerados
 
@@ -351,7 +360,8 @@ Para observar o ciclo completo e gerar evidências para análise, utilize a segu
 | `logs/lab_operations.log` | Eventos estruturados em JSON Lines |
 | `logs/keylogger_simulado.txt` | Entradas registradas na janela de teste |
 | `logs/sim_persistence.json` | Registro conceitual de persistência simulada |
-| `logs/defense_report.json` | Relatório de indicadores, alertas e recomendações |
+| `logs/defense_report.json` | Relatório estruturado de indicadores, alertas e recomendações |
+| `logs/defense_report.md` | Relatório legível em Markdown com resumo executivo, MITRE, alertas e recomendações |
 
 ## Segurança e limitações
 
@@ -374,7 +384,7 @@ Possíveis evoluções para versões futuras:
 
 - Implementar testes automatizados e de regressão para validação de caminhos, criptografia, integridade, regras de detecção e níveis de risco.
 - Ampliar os cenários de detecção e a correlação de eventos.
-- Adicionar exportação de relatório em HTML ou Markdown.
+- Adicionar exportação de relatório em HTML.
 - Adicionar exemplos de regras e consultas para integração conceitual com ferramentas SIEM.
 - Melhorar a visualização dos indicadores e alertas.
 
@@ -382,21 +392,26 @@ Esses itens são propostas de evolução e não devem ser interpretados como fun
 
 ## Demonstração
 
-Adicione capturas de tela reais do laboratório na pasta `images/`. Sugestões:
 
-| Arquivo sugerido | Conteúdo |
-|---|---|
-| `images/cli-help.png` | Ajuda e subcomandos disponíveis na CLI |
-| `images/ransomware-encryption.png` | Arquivos fictícios antes e depois da cifragem |
-| `images/integrity-check.png` | Resultado da restauração e verificação SHA-256 |
-| `images/keylogger-window.png` | Janela de captura controlada |
-| `images/defense-report.png` | Resumo do relatório defensivo e técnicas MITRE |
+### CLI e estado do laboratório
 
-Quando as imagens forem adicionadas ao repositório, elas podem ser incorporadas aqui, por exemplo:
+![CLI e status](images/cli-help.png)
 
-```markdown
+### Cifragem simulada de ransomware
+
+![Cifragem de ransomware](images/ransomware-encryption.png)
+
+### Restauração e integridade
+
+![Verificação de integridade](images/integrity-check.png)
+
+### Captura controlada e simulação do keylogger
+
+![Captura e simulação do keylogger](images/keylogger-window.png)
+
+### Relatório defensivo e técnicas MITRE ATT&CK
+
 ![Relatório defensivo](images/defense-report.png)
-```
 
 ## Autor
 
