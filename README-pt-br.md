@@ -4,12 +4,12 @@
 
 **Laboratório controlado para simulação de comportamentos de malware, coleta de indicadores e análise defensiva com mapeamento MITRE ATT&CK.**
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
-![Cryptography](https://img.shields.io/badge/Cryptography-AES--256--GCM-6f42c1)
-![MITRE ATT&CK](https://img.shields.io/badge/Framework-MITRE%20ATT%26CK-red)
-![Status](https://img.shields.io/badge/Status-Educacional-informational)
+<img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat&logo=python&logoColor=white">
+<img alt="Cryptography" src="https://img.shields.io/badge/Cryptography-AES--256--GCM-6f42c1?style=flat">
+<img alt="MITRE ATT&CK" src="https://img.shields.io/badge/Framework-MITRE%20ATT%26CK-red?style=flat">
+<img alt="Status" src="https://img.shields.io/badge/Status-Educacional-informational?style=flat">
 
-Português | [English](README.md)
+<b>Português</b> | <a href="README.md">English</a>
 
 </div>
 
@@ -117,7 +117,7 @@ flowchart TD
 ### Estrutura de diretórios
 
 ```text
-malware-lab-python/
+simulated-ransomware-keylogger-soc-lab-extended/
 ├── cli.py
 ├── ransomware/
 │   ├── __init__.py
@@ -185,8 +185,8 @@ cryptography>=42.0.0
 Clone o repositório:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd malware-lab-python
+git clone https://github.com/Ygor-Nassif/simulated-ransomware-keylogger-soc-lab-extended.git
+cd simulated-ransomware-keylogger-soc-lab-extended
 ```
 
 Crie e ative um ambiente virtual.
@@ -404,7 +404,7 @@ Quando as imagens forem adicionadas ao repositório, elas podem ser incorporadas
 
 Estudante de Ciência da Computação com interesse em Cibersegurança, análise de malware, segurança ofensiva e desenvolvimento de ferramentas em Python.
 
-- GitHub: [adicione seu perfil]
+- GitHub: [github.com/Ygor-Nassif](github.com/Ygor-Nassif)
 - LinkedIn: [linkedin.com/in/ygor-jianjulio-nassif](https://www.linkedin.com/in/ygor-jianjulio-nassif)
 
 ---
